@@ -1,0 +1,165 @@
+CREATE DATABASE IF NOT EXISTS e_store
+DEFAULT CHARACTER SET utf8
+DEFAULT COLLATE utf8_general_ci;
+
+USE e_store;
+
+CREATE TABLE brands (
+     id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+     name VARCHAR(250) NOT NULL,
+     PRIMARY KEY(id)
+);
+
+CREATE TABLE categories (
+     id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+     name VARCHAR(250) NOT NULL,
+     PRIMARY KEY(id)
+);
+
+CREATE TABLE products (
+     id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+     name VARCHAR(250) NOT NULL,
+     brand_id INT UNSIGNED NOT NULL,
+     category_id INT UNSIGNED NOT NULL,
+     attributes JSON NOT NULL,
+     PRIMARY KEY(id),
+     INDEX CATEGORY_ID(category_id ASC),
+     INDEX BRAND_ID(brand_id ASC)
+);
+
+INSERT INTO brands (name) VALUES
+('Samsung'),
+('Nokia'),
+('Canon');
+
+INSERT INTO categories (name) VALUES
+('Television'),
+('Mobile Phone'),
+('Camera');
+
+-- Televisions
+INSERT INTO products (name, brand_id, category_id, attributes) VALUES
+('Prime', '1', '1', '{"screen" : "50 inch", "resolution" : "2048 x 1152 pixels", "ports" : {"hdmi" : 1, "usb" : 3}, "speakers" : {"left" : "10 watt", "right" : "10 watt"}}'),
+('Octoview', '1', '1', '{"screen" : "40 inch", "resolution" : "1920 x 1080 pixels", "ports" : {"hdmi" : 1, "usb" : 2}, "speakers" : {"left" : "10 watt", "right" : "10 watt"}}'),
+('Dreamer', '1', '1', '{"screen" : "30 inch", "resolution" : "1600 x 900 pixels", "ports" : {"hdmi" : 1, "usb" : 1}, "speakers" : {"left" : "10 watt", "right" : "10 watt"}}'),
+('Bravia', '1', '1', '{"screen" : "25 inch", "resolution" : "1366 x 768 pixels", "ports" : {"hdmi" : 1, "usb" : 0}, "speakers" : {"left" : "5 watt", "right" : "5 watt"}}'),
+('Proton', '1', '1', '{"screen" : "20 inch", "resolution" : "1280 x 720 pixels", "ports" : {"hdmi" : 0, "usb" : 0}, "speakers" : {"left" : "5 watt", "right" : "5 watt"}}');
+
+-- Mobile Phones
+INSERT INTO products (name, brand_id, category_id, attributes) VALUES
+('Desire', '2', '2', JSON_BUILD_OBJECT("network",
+        JSON_ARRAY_PUSH_STRING('["GSM", "CDMA", "HSPA"]', 'EVDO'),
+        "body",
+        "5.11 x 2.59 x 0.46 inches",
+        "weight",
+        "143 grams",
+        "sim",
+        "Micro-SIM",
+        "display",
+        "4.5 inches",
+        "resolution",
+        "720 x 1280 pixels",
+        "os",
+        "Android Jellybean v4.3"
+    )
+),
+('Passion', '2', '2', JSON_BUILD_OBJECT("network",
+        JSON_ARRAY_PUSH_STRING('["GSM", "CDMA"]', 'HSPA'),
+        "body",
+        "6.11 x 3.59 x 0.46 inches",
+        "weight",
+        "145 grams",
+        "sim",
+        "Micro-SIM",
+        "display",
+        "4.5 inches",
+        "resolution",
+        "720 x 1280 pixels",
+        "os",
+        "Android Jellybean v4.3"
+    )
+),
+('Emotion', '2', '2', JSON_BUILD_OBJECT("network" ,
+        JSON_ARRAY_PUSH_STRING('["GSM", "CDMA"]', 'EVDO'),
+        "body",
+        "5.50 x 2.50 x 0.50 inches",
+        "weight",
+        "125 grams",
+        "sim",
+        "Micro-SIM",
+        "display",
+        "5.00 inches",
+        "resolution",
+        "720 x 1280 pixels",
+        "os",
+        "Android KitKat v4.3"
+    )
+),
+('Sensation', '2', '2', JSON_BUILD_OBJECT("network",
+        JSON_ARRAY_PUSH_STRING('["GSM", "HSPA"]', 'EVDO'),
+        "body",
+        "4.00 x 2.00 x 0.75 inches",
+        "weight",
+        "150 grams",
+        "sim",
+        "Micro-SIM",
+        "display",
+        "3.5 inches",
+        "resolution",
+        "720 x 1280 pixels",
+        "os",
+        "Android Lollipop v4.3"
+    )
+),
+('Joy', '2', '2', JSON_BUILD_OBJECT("network",
+        JSON_ARRAY_PUSH_STRING('["CDMA", "HSPA"]', 'EVDO'),
+        "body",
+        "7.00 x 3.50 x 0.25 inches",
+        "weight",
+        "250 grams",
+        "sim",
+        "Micro-SIM",
+        "display",
+        "6.5 inches",
+        "resolution",
+        "1920 x 1080 pixels",
+        "os",
+        "Android Marshmallow v4.3"
+    )
+);
+
+-- Cameras
+INSERT INTO products (name, brand_id, category_id, attributes) VALUES
+('Explorer', '3', '3', '{"sensor_type" : "CMOS", "processor" : "Digic DV III", "scanning_system" : "progressive", "mount_type" : "PL", "monitor_type" : "LCD"}'),
+('Runner', '3', '3',   '{"sensor_type" : "CMOS", "processor" : "Digic DV II",  "scanning_system" : "progressive", "mount_type" : "PL", "monitor_type" : "LED"}'),
+('Traveler', '3', '3', '{"sensor_type" : "CMOS", "processor" : "Digic DV II",  "scanning_system" : "progressive", "mount_type" : "PL", "monitor_type" : "LCD"}'),
+('Walker', '3', '3',   '{"sensor_type" : "CMOS", "processor" : "Digic DV I",   "scanning_system" : "progressive", "mount_type" : "PL", "monitor_type" : "LED"}'),
+('Jumper', '3', '3',   '{"sensor_type" : "CMOS", "processor" : "Digic DV I",   "scanning_system" : "progressive", "mount_type" : "PL", "monitor_type" : "LCD"}');
+
+SELECT JSON_GET_TYPE(attributes)
+FROM products;
+
+SELECT * FROM products
+WHERE category_id = 1
+AND attributes::ports::usb > 0
+AND attributes::ports::hdmi > 0;
+
+UPDATE products
+SET attributes::$body_color = 'red'
+WHERE category_id = 1;
+
+UPDATE products
+SET attributes::$chipset = 'Qualcomm'
+WHERE category_id = 2;
+
+UPDATE products
+SET attributes::$chipset = 'Qualcomm Snapdragon'
+WHERE category_id = 2;
+
+UPDATE products
+SET attributes = JSON_DELETE_KEY(attributes, 'mount_type')
+WHERE category_id = 3;
+
+DELETE FROM products
+WHERE category_id = 2
+AND attributes::$os LIKE '%Jellybean%';
