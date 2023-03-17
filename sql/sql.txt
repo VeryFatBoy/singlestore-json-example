@@ -27,15 +27,15 @@ CREATE TABLE products (
      INDEX BRAND_ID(brand_id ASC)
 );
 
-INSERT INTO brands (name) VALUES
-('Samsung'),
-('Nokia'),
-('Canon');
+INSERT INTO brands (id, name) VALUES
+(1, 'Samsung'),
+(2, 'Nokia'),
+(3, 'Canon');
 
-INSERT INTO categories (name) VALUES
-('Television'),
-('Mobile Phone'),
-('Camera');
+INSERT INTO categories (id, name) VALUES
+(1, 'Television'),
+(2, 'Mobile Phone'),
+(3, 'Camera');
 
 -- Televisions
 INSERT INTO products (name, brand_id, category_id, attributes) VALUES
