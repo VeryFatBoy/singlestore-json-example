@@ -4,27 +4,32 @@ DEFAULT COLLATE utf8_general_ci;
 
 USE e_store;
 
-CREATE TABLE brands (
-     id INT UNSIGNED NOT NULL AUTO_INCREMENT,
-     name VARCHAR(250) NOT NULL,
-     PRIMARY KEY(id)
+USE e_store;
+
+DROP TABLE IF EXISTS brands;
+CREATE TABLE IF NOT EXISTS brands (
+    id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    name VARCHAR(250) NOT NULL,
+    PRIMARY KEY(id)
 );
 
-CREATE TABLE categories (
-     id INT UNSIGNED NOT NULL AUTO_INCREMENT,
-     name VARCHAR(250) NOT NULL,
-     PRIMARY KEY(id)
+DROP TABLE IF EXISTS categories;
+CREATE TABLE IF NOT EXISTS categories (
+    id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    name VARCHAR(250) NOT NULL,
+    PRIMARY KEY(id)
 );
 
-CREATE TABLE products (
-     id INT UNSIGNED NOT NULL AUTO_INCREMENT,
-     name VARCHAR(250) NOT NULL,
-     brand_id INT UNSIGNED NOT NULL,
-     category_id INT UNSIGNED NOT NULL,
-     attributes JSON NOT NULL,
-     PRIMARY KEY(id),
-     INDEX CATEGORY_ID(category_id ASC),
-     INDEX BRAND_ID(brand_id ASC)
+DROP TABLE IF EXISTS products;
+CREATE TABLE IF NOT EXISTS products (
+    id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    name VARCHAR(250) NOT NULL,
+    brand_id INT UNSIGNED NOT NULL,
+    category_id INT UNSIGNED NOT NULL,
+    attributes JSON NOT NULL,
+    PRIMARY KEY(id),
+    INDEX CATEGORY_ID(category_id ASC),
+    INDEX BRAND_ID(brand_id ASC)
 );
 
 INSERT INTO brands (id, name) VALUES
