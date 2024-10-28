@@ -2,10 +2,10 @@
 @section('content')
 <style>
    .container {
-   max-width: 450px;
+      max-width: 450px;
    }
    .push-top {
-   margin-top: 50px;
+      margin-top: 50px;
    }
 </style>
 <div class="row">
@@ -44,18 +44,25 @@
       </div>
       <div class="form-group">
          <label><b>Attributes</b></label>
-         @foreach($one_product->attributes as $key => $value)
+         @php
+            // Check if attributes is a string before decoding
+            $attributes = is_string($one_product->attributes) ? json_decode($one_product->attributes, true) : $one_product->attributes;
+         @endphp
+         @foreach($attributes as $key => $value)
          <div class="row">
             <div class="col-md-5" style="margin-bottom: 2px;">
-               <label for="$key"><b>{{ $key }}:</b></label>
+               <label for="{{ $key }}"><b>{{ $key }}:</b></label>
             </div>
-            <div class="col-md-5">
-               {{ json_encode($value) }}
+            <div class="col-md-7">
+               @if (is_array($value))
+                  {{ implode(', ', $value) }}  {{-- Handle array values --}}
+               @else
+                  {{ $value }}  {{-- Handle scalar values --}}
+               @endif 
             </div>
          </div>
          @endforeach
       </div>
-      </form>
    </div>
 </div>
 @endsection
