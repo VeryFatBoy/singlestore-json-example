@@ -87,15 +87,27 @@ class ProductController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $updateProduct = $request->validate([
-            'name' => 'required|max:255',
-            'brand_id' => 'required|numeric',
-            'category_id' => 'required|numeric',
-        ]);
+        $product = Product::findOrFail($id);
 
-        Product::whereId($id)->update($updateProduct);
+        $product->name = $request->input('name');
+        $product->brand_id = $request->input('brand_id');
+        $product->category_id = $request->input('category_id');
 
-        return redirect('/products')->with('success', 'Product has been updated');
+        $attributes = $request->input('attributes', []);
+        foreach ($attributes as $key => &$value) {
+            // Only decode if the value is a JSON string (array/dictionary format)
+            if (is_string($value) && (str_starts_with($value, '{') || str_starts_with($value, '['))) {
+                $decodedValue = json_decode($value, true);
+                // Check if decoding was successful, else retain original string
+                $value = json_last_error() === JSON_ERROR_NONE ? $decodedValue : $value;
+            }
+        }
+
+        // Assign the processed attributes back to the product
+        $product->attributes = $attributes;
+        $product->save();
+
+        return redirect()->route('products.index')->with('success', 'Product updated successfully');
     }
 
     /**
