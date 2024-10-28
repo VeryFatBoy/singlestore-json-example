@@ -2,7 +2,7 @@
 @section('content')
 <style>
    .push-top {
-   margin-top: 50px;
+      margin-top: 50px;
    }
 </style>
 <div class="push-top">
@@ -31,17 +31,27 @@
          <td>{{ $product->brand_name }}</td>
          <td>{{ $product->category_name }}</td>
          <td>
-            @foreach ($product->attributes as $key => $value)
-               <b>{{ $key }}</b>: {{ json_encode($value) }} <br />
+            @php
+               // Check if attributes is a string before decoding
+               $attributes = is_string($product->attributes) ? json_decode($product->attributes, true) : $product->attributes;
+            @endphp
+            @foreach ($attributes as $key => $value)
+               <b>{{ $key }}</b>: 
+               @if (is_array($value))
+                  {{ implode(', ', $value) }}  {{-- Handle array values --}}
+               @else
+                  {{ $value }}  {{-- Handle scalar values --}}
+               @endif 
+               <br />
             @endforeach
          </td>
          <td class="text-center">
             <a href="{{ route('products.show', $product->id) }}" class="btn btn-info btn-sm">Show</a>
-            <a href="{{ route('products.edit', $product->id) }}" class="btn btn-primary btn-sm"">Edit</a>
+            <a href="{{ route('products.edit', $product->id) }}" class="btn btn-primary btn-sm">Edit</a>
             <form action="{{ route('products.destroy', $product->id) }}" method="post" style="display: inline-block">
                @csrf
                @method('DELETE')
-               <button class="btn btn-danger btn-sm"" type="submit">Delete</button>
+               <button class="btn btn-danger btn-sm" type="submit">Delete</button>
             </form>
          </td>
       </tr>
