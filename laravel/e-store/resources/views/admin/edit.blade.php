@@ -2,10 +2,10 @@
 @section('content')
 <style>
    .container {
-   max-width: 450px;
+      max-width: 450px;
    }
    .push-top {
-   margin-top: 50px;
+      margin-top: 50px;
    }
 </style>
 <div class="row">
@@ -39,37 +39,34 @@
          </div>
          <div class="form-group">
             <label><b>Brand:</b></label>
-               <select name="brand_id" class="form-control">
+            <select name="brand_id" class="form-control">
                @foreach($brands as $brand)
-                  @if ($product->brand_id == $brand->id)
-  		     <option value="{{ $brand->id }}" selected>{{ $brand->name }}</option>
-  	          @else
-		     <option value="{{ $brand->id }}">{{ $brand->name }}</option>
-	          @endif
+                  <option value="{{ $brand->id }}" {{ $product->brand_id == $brand->id ? 'selected' : '' }}>
+                     {{ $brand->name }}
+                  </option>
                @endforeach
-               </select>
+            </select>
          </div>
          <div class="form-group">
             <label><b>Category:</b></label>
-               <select name="category_id" class="form-control">
+            <select name="category_id" class="form-control">
                @foreach($categories as $category)
-                  @if ($product->category_id == $category->id)
-                     <option value="{{ $category->id }}" selected>{{ $category->name }}</option>
-                  @else
-                     <option value="{{ $category->id }}">{{ $category->name }}</option>
-                  @endif
+                  <option value="{{ $category->id }}" {{ $product->category_id == $category->id ? 'selected' : '' }}>
+                     {{ $category->name }}
+                  </option>
                @endforeach
-               </select>
+            </select>
          </div>
          <div class="form-group">
             <label for="attributes"><b>Attributes</b></label>
             @foreach($product->attributes as $key => $value)
             <div class="row">
                <div class="col-md-5" style="margin-bottom: 2px;">
-                  <label for="$key"><b>{{ $key }}:</b></label>
+                  <label for="{{ $key }}"><b>{{ $key }}:</b></label>
                </div>
                <div class="col-md-5">
-                  <input type="text" class="form-control" name="attributes[{{ $key }}]" value="{{ json_encode($value) }}" readonly="readonly">
+                  <input type="text" class="form-control" name="attributes[{{ $key }}]" 
+                         value="{{ is_array($value) ? json_encode($value) : $value }}">
                </div>
             </div>
             @endforeach
